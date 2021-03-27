@@ -1,0 +1,104 @@
+{
+  "name": "easy-api-doc",
+  "version": "0.1.0",
+  "description": "Good, updated, and easy API documentation for free and for all!",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json --sourcemap --strict",
+    "commit": "cz",
+    "dev": "nodemon",
+    "lint": "tsc --project tsconfig.json --noEmit && eslint ./src/**/*.ts --fix",
+    "format": "prettier --write .",
+    "release:minor": "standard-version --no-verify --release-as minor",
+    "release:major": "standard-version --no-verify --release-as major",
+    "release:patch": "standard-version --no-verify --release-as patch",
+    "test": "mocha -r ts-node/register 'test/**/*.test.ts' --exit --bail",
+    "test:tdd": "mocha -r ts-node/register 'test/**/*.test.ts' --watch --watch-extensions ts --grep '#sanity|#unit'",
+    "test:coverage": "nyc npm run test"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MutterPedro/easy-api-doc.git"
+  },
+  "keywords": [
+    "docs",
+    "documentation",
+    "api",
+    "open-api",
+    "swagger",
+    "rest",
+    "docs"
+  ],
+  "author": "MutterPedro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MutterPedro/easy-api-doc/issues"
+  },
+  "homepage": "https://github.com/MutterPedro/easy-api-doc#readme",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "commitizen": "^4.2.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.23.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-mocha": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "faker": "^5.5.1",
+    "husky": "^5.2.0",
+    "lint-staged": "^10.5.4",
+    "mocha": "^8.3.2",
+    "nyc": "^15.1.0",
+    "prettier": "^2.2.1",
+    "sinon": "^10.0.0",
+    "sinon-chai": "^3.6.0",
+    "standard-version": "^9.1.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run lint"
+    ],
+    "*.{ts,md}": [
+      "prettier --check"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "test/**",
+      "node_modules/**/*",
+      "**/*.d.ts",
+      "dist/**/*",
+      "*.js"
+    ],
+    "all": true,
+    "cache": true,
+    "check-coverage": true,
+    "branches": 80,
+    "lines": 85,
+    "functions": 85,
+    "statements": 85,
+    "per-file": true
+  }
+}
