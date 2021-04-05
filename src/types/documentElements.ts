@@ -1,7 +1,5 @@
 import { JSONPrimitives } from './jsonSchema';
 
-export type HttpVerbs = 'get' | 'post' | 'put' | 'trace' | 'patch' | 'delete' | 'options' | 'head' | 'connect';
-
 export interface Examples {
   summary?: string;
   description?: string;

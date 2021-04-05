@@ -2,7 +2,7 @@ import yaml from 'yaml';
 
 import { DocumentElement } from './base';
 import { JSONPrimitives } from '../types/jsonSchema';
-import { ExternalDocumentation } from '../types/elements';
+import { ExternalDocumentation } from '../types/documentElements';
 
 /**
  * References:

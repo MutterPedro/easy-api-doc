@@ -13,7 +13,7 @@ export abstract class DocumentElement implements DocumentGenerator {
 export abstract class DocumentCompositeElement<T> extends DocumentElement implements DocumentGenerator {
   abstract generate(format: 'json' | 'yaml'): string;
 
-  abstract add(child: T): void;
-  abstract remove(child: T): void;
+  abstract add(key: string, child: T): void;
+  abstract remove(key: string): void;
   abstract getChildren(): T[];
 }

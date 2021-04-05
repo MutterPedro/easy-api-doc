@@ -1,11 +1,15 @@
-import { JSONPrimitives } from '../types/jsonSchema';
-import { Examples, Style } from '../types/documentElements';
-import { DocumentElement } from './base';
-import Schema from './Schema';
-import MediaType from './MediaType';
 import yaml from 'yaml';
 
-interface HeaderProperties {
+import { DocumentElement } from './base';
+
+import MediaType from './MediaType';
+import Schema from './Schema';
+import { Examples, Style } from '../types/documentElements';
+import { JSONPrimitives } from '../types/jsonSchema';
+
+interface ParameterProperties {
+  name: string;
+  in: 'query' | 'header' | 'path' | 'cookie';
   description?: string;
   required?: boolean;
   deprecated?: boolean;
@@ -19,8 +23,8 @@ interface HeaderProperties {
   content?: { [key: string]: MediaType };
 }
 
-export default class Header extends DocumentElement {
-  constructor(private readonly properties: HeaderProperties) {
+export default class Parameter extends DocumentElement {
+  constructor(private readonly properties: ParameterProperties) {
     super();
   }
 

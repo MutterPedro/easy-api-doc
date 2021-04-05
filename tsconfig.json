@@ -27,6 +27,7 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "pretty": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "downlevelIteration": true
   }
 }

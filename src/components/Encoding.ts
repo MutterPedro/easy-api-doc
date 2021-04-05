@@ -1,6 +1,6 @@
 import yaml from 'yaml';
 
-import { Style } from '../types/elements';
+import { Style } from '../types/documentElements';
 import { DocumentElement } from './base';
 import Header from './Header';
 

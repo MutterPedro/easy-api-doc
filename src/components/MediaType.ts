@@ -4,7 +4,7 @@ import { DocumentElement } from './base';
 import Schema from './Schema';
 import Encoding from './Encoding';
 import { JSONPrimitives } from '../types/jsonSchema';
-import { Examples } from '../types/elements';
+import { Examples } from '../types/documentElements';
 
 interface MediaTypeProperties {
   schema: Schema;
