@@ -1,4 +1,8 @@
-export abstract class DocumentElement {
+export interface DocumentGenerator {
+  generate(format: 'json' | 'yaml'): string;
+}
+
+export abstract class DocumentElement implements DocumentGenerator {
   abstract generate(format: 'json' | 'yaml'): string;
 
   toJSON(): Record<string, unknown> {
@@ -6,9 +10,8 @@ export abstract class DocumentElement {
   }
 }
 
-export abstract class CompositeElement<T> extends DocumentElement {
+export abstract class DocumentCompositeElement<T> extends DocumentElement implements DocumentGenerator {
   abstract generate(format: 'json' | 'yaml'): string;
-  abstract toJSON(): Record<string, unknown>;
 
   abstract add(child: T): void;
   abstract remove(child: T): void;

@@ -2,6 +2,7 @@ import yaml from 'yaml';
 
 import { DocumentElement } from './base';
 import { JSONPrimitives } from '../types/jsonSchema';
+import { ExternalDocumentation } from '../types/elements';
 
 /**
  * References:
@@ -58,11 +59,6 @@ interface XMLObject {
   prefix?: string;
   attribute?: boolean;
   wrapped?: boolean;
-}
-
-interface ExternalDocumentation {
-  url: string;
-  description?: string;
 }
 
 export default class Schema extends DocumentElement {

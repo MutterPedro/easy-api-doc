@@ -10,3 +10,8 @@ export interface Examples {
 }
 
 export type Style = 'form' | 'simple' | 'matrix' | 'label' | 'spaceDelimited' | 'pipeDelimited' | 'deepObject';
+
+export interface ExternalDocumentation {
+  url: string;
+  description?: string;
+}
