@@ -1,3 +1,5 @@
+import yaml from 'yaml';
+
 import { DocumentElement } from './base';
 import { JSONPrimitives } from '../types/jsonSchema';
 
@@ -63,25 +65,28 @@ interface ExternalDocumentation {
   description?: string;
 }
 
-export default class Schema implements DocumentElement {
+export default class Schema extends DocumentElement {
   constructor(
     private readonly properties: SchemaProperties,
-    private readonly specificationExtensions?: Array<{ [key: string]: JSONPrimitives }>,
-  ) {}
+    private readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super();
+  }
 
   private generateJSON(props: SchemaProperties): string {
     return JSON.stringify(props);
   }
 
   private generateYAML(props: SchemaProperties): string {
-    return JSON.stringify(props);
+    return yaml.stringify(props);
   }
 
   generate(format: 'json' | 'yaml'): string {
     let props = this.properties;
     if (this.specificationExtensions) {
-      // TODO: extensions with 'x-'
-      props = { ...props, ...this.specificationExtensions };
+      props = Object.entries(this.specificationExtensions).reduce((current, [key, value]) => {
+        return { ...current, [`x-${key}`]: value };
+      }, props);
     }
 
     if (format === 'json') {

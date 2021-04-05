@@ -103,7 +103,8 @@
       "node_modules/**/*",
       "**/*.d.ts",
       "dist/**/*",
-      "*.js"
+      "*.js",
+      "coverage/**/*"
     ],
     "all": true,
     "cache": true,
@@ -113,5 +114,8 @@
     "functions": 85,
     "statements": 85,
     "per-file": true
+  },
+  "dependencies": {
+    "yaml": "^1.10.2"
   }
 }
