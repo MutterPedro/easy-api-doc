@@ -1,4 +1,4 @@
-export type HttpVerbs = 'get' | 'post' | 'put' | 'trace' | 'patch' | 'delete' | 'options' | 'head' | 'connect';
+export type HttpVerb = 'get' | 'post' | 'put' | 'trace' | 'patch' | 'delete' | 'options' | 'head' | 'connect';
 
 export type HttpStatusCode =
   | '100'

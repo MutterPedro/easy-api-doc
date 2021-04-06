@@ -1,7 +1,4 @@
-import yaml from 'yaml';
-
 import { DocumentElement } from './base';
-
 import MediaType from './MediaType';
 import Schema from './Schema';
 import { Examples, Style } from '../types/documentElements';
@@ -23,16 +20,11 @@ interface ParameterProperties {
   content?: { [key: string]: MediaType };
 }
 
-export default class Parameter extends DocumentElement {
-  constructor(private readonly properties: ParameterProperties) {
-    super();
-  }
-
-  generate(format: 'json' | 'yaml'): string {
-    if (format === 'json') {
-      return JSON.stringify(this.properties);
-    }
-
-    return yaml.stringify(this.properties);
+export default class Parameter extends DocumentElement<ParameterProperties> {
+  constructor(
+    protected readonly properties: ParameterProperties,
+    protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super(properties, specificationExtensions);
   }
 }

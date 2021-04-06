@@ -1,5 +1,4 @@
-import yaml from 'yaml';
-
+import { JSONPrimitives } from 'src/types/jsonSchema';
 import { DocumentElement } from './base';
 
 interface ServerProperties {
@@ -14,16 +13,11 @@ interface ServerVariables {
   enum?: string[];
 }
 
-export default class Server extends DocumentElement {
-  constructor(private readonly properties: ServerProperties) {
-    super();
-  }
-
-  generate(format: 'json' | 'yaml'): string {
-    if (format === 'json') {
-      return JSON.stringify(this.properties);
-    }
-
-    return yaml.stringify(this.properties);
+export default class Server extends DocumentElement<ServerProperties> {
+  constructor(
+    protected readonly properties: ServerProperties,
+    protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super(properties, specificationExtensions);
   }
 }

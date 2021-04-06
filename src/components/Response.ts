@@ -1,9 +1,8 @@
-import yaml from 'yaml';
-
 import { DocumentElement } from './base';
 import Header from './Header';
 import MediaType from './MediaType';
 import Link from './Link';
+import { JSONPrimitives } from '../types/jsonSchema';
 
 interface ResponseProperties {
   description?: string;
@@ -12,16 +11,11 @@ interface ResponseProperties {
   links?: { [key: string]: Link };
 }
 
-export default class Response extends DocumentElement {
-  constructor(private readonly properties: ResponseProperties) {
-    super();
-  }
-
-  generate(format: 'json' | 'yaml'): string {
-    if (format === 'json') {
-      return JSON.stringify(this.properties);
-    }
-
-    return yaml.stringify(this.properties);
+export default class Response extends DocumentElement<ResponseProperties> {
+  constructor(
+    protected readonly properties: ResponseProperties,
+    protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super(properties, specificationExtensions);
   }
 }

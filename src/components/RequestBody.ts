@@ -1,8 +1,7 @@
-import yaml from 'yaml';
-
 import { DocumentElement } from './base';
 
 import MediaType from './MediaType';
+import { JSONPrimitives } from '../types/jsonSchema';
 
 interface RequestBodyProperties {
   description?: string;
@@ -10,16 +9,11 @@ interface RequestBodyProperties {
   content?: { [key: string]: MediaType };
 }
 
-export default class RequestBody extends DocumentElement {
-  constructor(private readonly properties: RequestBodyProperties) {
-    super();
-  }
-
-  generate(format: 'json' | 'yaml'): string {
-    if (format === 'json') {
-      return JSON.stringify(this.properties);
-    }
-
-    return yaml.stringify(this.properties);
+export default class RequestBody extends DocumentElement<RequestBodyProperties> {
+  constructor(
+    protected readonly properties: RequestBodyProperties,
+    protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super(properties, specificationExtensions);
   }
 }

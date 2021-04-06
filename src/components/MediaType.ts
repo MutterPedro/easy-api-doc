@@ -1,5 +1,3 @@
-import yaml from 'yaml';
-
 import { DocumentElement } from './base';
 import Schema from './Schema';
 import Encoding from './Encoding';
@@ -13,16 +11,11 @@ interface MediaTypeProperties {
   enconding?: { [key: string]: Encoding };
 }
 
-export default class MediaType extends DocumentElement {
-  constructor(private readonly properties: MediaTypeProperties) {
-    super();
-  }
-
-  generate(format: 'json' | 'yaml'): string {
-    if (format === 'json') {
-      return JSON.stringify(this.properties);
-    }
-
-    return yaml.stringify(this.properties);
+export default class MediaType extends DocumentElement<MediaTypeProperties> {
+  constructor(
+    protected readonly properties: MediaTypeProperties,
+    protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super(properties, specificationExtensions);
   }
 }

@@ -1,8 +1,7 @@
-import yaml from 'yaml';
-
 import { Style } from '../types/documentElements';
 import { DocumentElement } from './base';
 import Header from './Header';
+import { JSONPrimitives } from '../types/jsonSchema';
 
 interface EncodingProperties {
   contentType?: string;
@@ -12,16 +11,11 @@ interface EncodingProperties {
   allowReserved?: boolean;
 }
 
-export default class Encoding extends DocumentElement {
-  constructor(private readonly properties: EncodingProperties) {
-    super();
-  }
-
-  generate(format: 'json' | 'yaml'): string {
-    if (format === 'json') {
-      return JSON.stringify(this.properties);
-    }
-
-    return yaml.stringify(this.properties);
+export default class Encoding extends DocumentElement<EncodingProperties> {
+  constructor(
+    protected readonly properties: EncodingProperties,
+    protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super(properties, specificationExtensions);
   }
 }

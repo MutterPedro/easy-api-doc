@@ -3,7 +3,6 @@ import { Examples, Style } from '../types/documentElements';
 import { DocumentElement } from './base';
 import Schema from './Schema';
 import MediaType from './MediaType';
-import yaml from 'yaml';
 
 interface HeaderProperties {
   description?: string;
@@ -19,16 +18,11 @@ interface HeaderProperties {
   content?: { [key: string]: MediaType };
 }
 
-export default class Header extends DocumentElement {
-  constructor(private readonly properties: HeaderProperties) {
-    super();
-  }
-
-  generate(format: 'json' | 'yaml'): string {
-    if (format === 'json') {
-      return JSON.stringify(this.properties);
-    }
-
-    return yaml.stringify(this.properties);
+export default class Header extends DocumentElement<HeaderProperties> {
+  constructor(
+    protected readonly properties: HeaderProperties,
+    protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super(properties, specificationExtensions);
   }
 }

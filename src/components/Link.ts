@@ -1,5 +1,3 @@
-import yaml from 'yaml';
-
 import { DocumentElement } from './base';
 import { JSONPrimitives } from '../types/jsonSchema';
 import Server from './Server';
@@ -13,16 +11,11 @@ interface LinkProperties {
   server?: Server;
 }
 
-export default class Link extends DocumentElement {
-  constructor(private readonly properties: LinkProperties) {
-    super();
-  }
-
-  generate(format: 'json' | 'yaml'): string {
-    if (format === 'json') {
-      return JSON.stringify(this.properties);
-    }
-
-    return yaml.stringify(this.properties);
+export default class Link extends DocumentElement<LinkProperties> {
+  constructor(
+    protected readonly properties: LinkProperties,
+    protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super(properties, specificationExtensions);
   }
 }

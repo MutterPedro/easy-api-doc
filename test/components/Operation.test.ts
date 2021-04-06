@@ -97,36 +97,6 @@ describe('Operation.ts', function () {
       expect(generated).to.not.contains('"404":{"content":{"application/json":{"schema":{"type":"object"}}');
     });
 
-    it('should return the correct responses successfully #unit', function () {
-      const summary = faker.random.words(5);
-      const operation = new Operation({
-        summary,
-        responses: {
-          '200': new Response({
-            content: {
-              'application/json': new MediaType({ schema: new Schema({ type: 'array' }) }),
-            },
-          }),
-        },
-      });
-
-      operation.add(
-        '404',
-        new Response({
-          content: {
-            'application/json': new MediaType({ schema: new Schema({ type: 'object' }) }),
-          },
-        }),
-      );
-      const children = operation.getChildren();
-
-      expect(children).to.be.a('array');
-      expect(children.length).to.be.eq(2);
-      children.forEach((child) => {
-        expect(child).to.be.instanceOf(Response);
-      });
-    });
-
     it('should generate a YAML file successfully #unit', function () {
       const summary = faker.random.words(5);
       const operation = new Operation({

@@ -1,13 +1,12 @@
-import yaml from 'yaml';
-
 import { DocumentCompositeElement } from './base';
 import Response from './Response';
 import Parameter from './Parameter';
 import { ExternalDocumentation } from '../types/documentElements';
 import RequestBody from './RequestBody';
 import { HttpStatusCode } from '../types/http';
-import { PathLike } from 'node:fs';
 import Server from './Server';
+import Path from './Path';
+import { JSONPrimitives } from '../types/jsonSchema';
 
 interface OperationProperties {
   responses: Partial<Record<HttpStatusCode, Response>> & { default?: Response };
@@ -18,17 +17,20 @@ interface OperationProperties {
   operationId?: string;
   parameters?: Parameter[];
   requestBody?: RequestBody;
-  callbacks?: { [key: string]: PathLike };
+  callbacks?: { [key: string]: Path };
   deprecated?: boolean;
   security?: { [key: string]: string[] };
   servers?: Server[];
 }
 
-export default class Operation extends DocumentCompositeElement<Response> {
+export default class Operation extends DocumentCompositeElement<OperationProperties, Response> {
   private children: Map<string, Response | undefined>;
 
-  constructor(private readonly properties: OperationProperties) {
-    super();
+  constructor(
+    protected readonly properties: OperationProperties,
+    protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
+  ) {
+    super(properties, specificationExtensions);
 
     this.children = new Map(Object.entries(this.properties.responses));
   }
@@ -44,19 +46,5 @@ export default class Operation extends DocumentCompositeElement<Response> {
     for (const [code, response] of this.children.entries()) {
       this.properties.responses[code as HttpStatusCode] = response;
     }
-  }
-
-  getChildren(): Response[] {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return Array.from(this.children.values()).filter(Boolean);
-  }
-
-  generate(format: 'json' | 'yaml'): string {
-    if (format === 'json') {
-      return JSON.stringify(this.properties);
-    }
-
-    return yaml.stringify(this.properties);
   }
 }
