@@ -38,7 +38,7 @@ describe('Operation.ts', function () {
       expect(generated).to.contains('"responses":{"200":{"content":{"application/json":{"schema":{"type":"array"}}}}}');
     });
 
-    it('should generate a JSON file with extra responses successfully #unit', function () {
+    it('should generate a JSON file with extra operations successfully #unit', function () {
       const summary = faker.random.words(5);
       const operation = new Operation({
         summary,
@@ -67,7 +67,7 @@ describe('Operation.ts', function () {
       expect(generated).to.contains('"404":{"content":{"application/json":{"schema":{"type":"object"}}');
     });
 
-    it('should generate a JSON file with removed extra responses successfully #unit', function () {
+    it('should generate a JSON file with removed extra operations successfully #unit', function () {
       const summary = faker.random.words(5);
       const operation = new Operation({
         summary,
