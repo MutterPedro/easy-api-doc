@@ -32,7 +32,7 @@ export abstract class DocumentElement<T> implements DocumentGenerator {
   }
 }
 
-export abstract class DocumentCompositeElement<T, C> extends DocumentElement<T> implements DocumentGenerator {
+export abstract class DocumentCompositeElement<T, C> extends DocumentElement<T> {
   abstract add(key: string, child: C): void;
   abstract remove(key: string): void;
 }
