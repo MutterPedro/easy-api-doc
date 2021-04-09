@@ -4,6 +4,7 @@ import faker from 'faker';
 import supertest from 'supertest';
 
 import ResponseBuilder from '../../src/builders/ResponseBuilder';
+import yaml from 'yaml';
 
 describe('ResponseBuilder.ts', function () {
   describe('Sanity tests', function () {
@@ -22,7 +23,13 @@ describe('ResponseBuilder.ts', function () {
       it('should generate a Response component JSON file successfully #unit', function (done) {
         const description = faker.lorem.sentence();
         const path = `/${faker.random.word()}`;
-        const body = { foo: faker.random.word() };
+        const body = {
+          foo: faker.random.word(),
+          bar: faker.datatype.boolean(),
+          baz: faker.datatype.number(),
+          foo2: [faker.datatype.number()],
+          bar2: null,
+        };
         const app = express();
         app.post(path, (_, res) => {
           res.status(200).json(body);
@@ -34,17 +41,50 @@ describe('ResponseBuilder.ts', function () {
           .end((err, res) => {
             expect(err).to.be.null;
 
-            const response = ResponseBuilder.fromAgentResponse(res, description);
-            const generated = response.generate('yaml');
+            const builder = ResponseBuilder.create();
+            builder.fromSuperAgentResponse(res, description);
+            const generated = builder.getOperation().generate('yaml');
+            const object = yaml.parse(generated);
 
             expect(generated).to.be.a('string');
-            expect(generated).to.contains(
-              'description: ' +
-                description +
-                '\ncontent:\n  application/json; charset=utf-8:\n    schema:\n      type: object\n      properties:\n        foo:\n          type: string\n          example: ' +
-                body.foo +
-                '\nheaders:',
-            );
+            expect(object).to.have.property('responses');
+            expect(object.responses).to.have.property('200');
+            expect(object.responses['200']).to.have.property('description', description);
+            expect(object.responses['200']).to.have.property('headers');
+            expect(object.responses['200'])
+              .to.have.property('content')
+              .deep.equal({
+                'application/json; charset=utf-8': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      foo: {
+                        type: 'string',
+                        example: body.foo,
+                      },
+                      bar: {
+                        type: 'boolean',
+                        example: body.bar,
+                      },
+                      baz: {
+                        type: 'number',
+                        example: body.baz,
+                      },
+                      foo2: {
+                        type: 'array',
+                        items: {
+                          type: 'number',
+                        },
+                        example: body.foo2,
+                      },
+                      bar2: {
+                        type: 'null',
+                        example: body.bar2,
+                      },
+                    },
+                  },
+                },
+              });
 
             done();
           });
@@ -65,19 +105,39 @@ describe('ResponseBuilder.ts', function () {
           .end((err, res) => {
             expect(err).to.be.null;
 
-            const response = ResponseBuilder.fromAgentResponse(res, description);
-            const generated = response.generate('yaml');
+            const builder = ResponseBuilder.create();
+            builder.fromSuperAgentResponse(res, description);
+            const generated = builder.getOperation().generate('yaml');
+            const object = yaml.parse(generated);
 
             expect(generated).to.be.a('string');
-            expect(generated).to.contains(
-              'description: ' +
-                description +
-                '\ncontent:\n  application/json; charset=utf-8:\n    schema:\n      type: object\n      properties:\n        foo:\n          type: object\n          properties:\n            bar:\n              type: string\n              example: ' +
-                body.foo.bar +
-                '\n          example:\n            bar: ' +
-                body.foo.bar +
-                '\nheaders:',
-            );
+            expect(object).to.have.property('responses');
+            expect(object.responses).to.have.property('200');
+            expect(object.responses['200']).to.have.property('description', description);
+            expect(object.responses['200']).to.have.property('headers');
+            expect(object.responses['200'])
+              .to.have.property('content')
+              .deep.equal({
+                'application/json; charset=utf-8': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      foo: {
+                        type: 'object',
+                        example: {
+                          bar: body.foo.bar,
+                        },
+                        properties: {
+                          bar: {
+                            type: 'string',
+                            example: body.foo.bar,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              });
 
             done();
           });

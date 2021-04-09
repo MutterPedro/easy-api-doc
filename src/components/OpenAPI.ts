@@ -6,19 +6,25 @@ import Server from './Server';
 import Component from './Component';
 import { ExternalDocumentation } from '../types/documentElements';
 
-interface OpenAPIProperties {
+export interface OpenAPIProperties {
   openapi: string;
   info: Info;
   paths: { [key: string]: Path };
   servers?: Server[];
   components?: Component[];
-  security?: Array<{ [key: string]: string[] }>;
-  tags?: Array<{
-    name: string;
-    description?: string;
-    externalDocs?: ExternalDocumentation;
-  }>;
+  security?: Security[];
+  tags?: Tag[];
   externalDocs?: ExternalDocumentation;
+}
+
+export interface Tag {
+  name: string;
+  description?: string;
+  externalDocs?: ExternalDocumentation;
+}
+
+export interface Security {
+  [key: string]: string[];
 }
 
 export default class OpenAPI extends DocumentCompositeElement<OpenAPIProperties, Path> {
@@ -27,12 +33,16 @@ export default class OpenAPI extends DocumentCompositeElement<OpenAPIProperties,
     properties: Omit<OpenAPIProperties, 'openapi'>,
     protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
   ) {
-    super({ ...properties, openapi: '3.0.3' }, specificationExtensions);
+    super({ ...properties, openapi: '3.0.3' }, specificationExtensions) /* istanbul ignore next */;
     this.properties = { ...properties, openapi: '3.0.3' };
   }
 
   private formatPathKey(key: string): string {
     return key[0] === '/' ? key : `/${key}`;
+  }
+
+  get(key: string): Path | void {
+    return this.properties.paths[this.formatPathKey(key)];
   }
 
   add(key: string, child: Path): void {

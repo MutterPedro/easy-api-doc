@@ -4,7 +4,7 @@ import MediaType from './MediaType';
 import Link from './Link';
 import { JSONPrimitives } from '../types/jsonSchema';
 
-interface ResponseProperties {
+export interface ResponseProperties {
   description?: string;
   headers?: { [key: string]: Header };
   content?: { [key: string]: MediaType };

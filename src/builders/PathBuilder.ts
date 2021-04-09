@@ -1,28 +1,35 @@
 import Path from '../components/Path';
-import Parameter from '../components/Parameter';
-import Server from '../components/Server';
 import { HttpVerb } from '../types/http';
-import Operation from '../components/Operation';
+import ResponseBuilder from './ResponseBuilder';
 
 export default class PathBuilder {
-  private constructor(private readonly path: Path) {}
+  private readonly path: Path;
 
-  static createPath(parameters?: Parameter[], summary?: string, description?: string, servers?: Server[]): PathBuilder {
-    return new PathBuilder(new Path({ parameters, servers, summary, description }));
+  private constructor(path?: Path) {
+    this.path = path || new Path({});
+  }
+
+  static create(): PathBuilder {
+    return new PathBuilder();
+  }
+
+  static from(path: Path): PathBuilder {
+    return new PathBuilder(path);
+  }
+
+  verb(verb: HttpVerb): ResponseBuilder {
+    const operation = this.path.get(verb);
+    if (!operation) {
+      const builder = ResponseBuilder.create();
+      this.path.add(verb, builder.getOperation());
+
+      return builder;
+    }
+
+    return ResponseBuilder.from(operation);
   }
 
   getPath(): Path {
     return this.path;
-  }
-
-  // TODO: create a OperationBuilder and return it here
-  addOperation(verb: HttpVerb, operation: Operation): this {
-    this.path.add(verb, operation);
-    return this;
-  }
-
-  removeOperation(verb: HttpVerb): this {
-    this.path.remove(verb);
-    return this;
   }
 }

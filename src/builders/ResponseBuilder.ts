@@ -6,17 +6,22 @@ import Response from '../components/Response';
 import { SchemaProperties } from '../components/Schema';
 import { JSONPrimitives } from '../types/jsonSchema';
 import Header from '../components/Header';
+import { HttpStatusCode } from '../types/http';
+import Operation from '../components/Operation';
 
 export default class ResponseBuilder {
-  private static extractType(item: unknown): SchemaType {
+  private readonly operation: Operation;
+
+  private extractType(item: unknown): SchemaType {
+    if (item === undefined || item === null) {
+      return 'null';
+    }
+
     switch (typeof item) {
       case 'boolean':
         return 'boolean';
       case 'string':
         return 'string';
-      case 'undefined':
-        return 'null';
-      case 'bigint':
       case 'number':
         return 'number';
       default:
@@ -24,7 +29,7 @@ export default class ResponseBuilder {
     }
   }
 
-  private static extractProperties(item: any): SchemaProperties {
+  private extractProperties(item: any): SchemaProperties {
     const schemaType = this.extractType(item);
     const schemaProperties: SchemaProperties = {
       type: schemaType,
@@ -46,24 +51,43 @@ export default class ResponseBuilder {
     return schemaProperties;
   }
 
-  static fromAgentResponse(res: AgentResponse, description?: string): Response {
-    return new Response({
-      description,
-      content: {
-        [res.headers['content-type']]: new MediaType({
-          schema: new Schema(this.extractProperties(res.body)),
-        }),
-      },
-      headers: Object.entries<JSONPrimitives>(res.headers).reduce<{ [key: string]: Header }>(
-        (headers, [key, example]) => ({
-          ...headers,
-          [key]: new Header({
-            schema: new Schema(this.extractProperties(example)),
-            example,
+  private constructor(operation?: Operation) {
+    this.operation = operation || new Operation({ responses: {} });
+  }
+
+  static create(): ResponseBuilder {
+    return new ResponseBuilder();
+  }
+
+  static from(operation: Operation): ResponseBuilder {
+    return new ResponseBuilder(operation);
+  }
+
+  getOperation(): Operation {
+    return this.operation;
+  }
+
+  fromSuperAgentResponse(res: AgentResponse, description: string): void {
+    this.operation.add(
+      res.status.toString() as HttpStatusCode,
+      new Response({
+        description,
+        content: {
+          [res.headers['content-type']]: new MediaType({
+            schema: new Schema(this.extractProperties(res.body)),
           }),
-        }),
-        {},
-      ),
-    });
+        },
+        headers: Object.entries<JSONPrimitives>(res.headers).reduce<{ [key: string]: Header }>(
+          (headers, [key, example]) => ({
+            ...headers,
+            [key]: new Header({
+              schema: new Schema(this.extractProperties(example)),
+              example,
+            }),
+          }),
+          {},
+        ),
+      }),
+    );
   }
 }

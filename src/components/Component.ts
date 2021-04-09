@@ -10,7 +10,7 @@ import SecurityScheme from './SecurityScheme';
 import Link from './Link';
 import Path from './Path';
 
-interface ComponentProperties {
+export interface ComponentProperties {
   schemas?: { [key: string]: Schema };
   responses?: { [key: string]: Response };
   parameters?: { [key: string]: Parameter };

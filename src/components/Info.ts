@@ -1,7 +1,7 @@
 import { DocumentElement } from './base';
 import { JSONPrimitives } from '../types/jsonSchema';
 
-interface InfoProperties {
+export interface InfoProperties {
   title: string;
   version: string;
   description?: string;

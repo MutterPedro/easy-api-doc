@@ -8,7 +8,7 @@ import Server from './Server';
 import Path from './Path';
 import { JSONPrimitives } from '../types/jsonSchema';
 
-interface OperationProperties {
+export interface OperationProperties {
   responses: Partial<Record<HttpStatusCode, Response>> & { default?: Response };
   tags?: string[];
   summary?: string;
@@ -30,7 +30,7 @@ export default class Operation extends DocumentCompositeElement<OperationPropert
     protected readonly properties: OperationProperties,
     protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
   ) {
-    super(properties, specificationExtensions);
+    super(properties, specificationExtensions) /* istanbul ignore next */;
 
     this.children = new Map(Object.entries(this.properties.responses));
   }

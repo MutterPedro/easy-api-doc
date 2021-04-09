@@ -27,11 +27,15 @@ export default class Path extends DocumentCompositeElement<PathProperties, Opera
     protected readonly properties: PathProperties,
     protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
   ) {
-    super(properties, specificationExtensions);
+    super(properties, specificationExtensions) /* istanbul ignore next */;
   }
 
   add(key: HttpVerb, child: Operation): void {
     this.properties[key] = child;
+  }
+
+  get(key: HttpVerb): Operation | void {
+    return this.properties[key];
   }
 
   remove(key: HttpVerb): void {

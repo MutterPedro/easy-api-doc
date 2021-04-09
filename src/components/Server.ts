@@ -1,7 +1,7 @@
 import { JSONPrimitives } from 'src/types/jsonSchema';
 import { DocumentElement } from './base';
 
-interface ServerProperties {
+export interface ServerProperties {
   url: string;
   description?: string;
   variables?: { [key: string]: ServerVariables };
