@@ -43,7 +43,7 @@ describe('ResponseBuilder.ts', function () {
                 description +
                 '\ncontent:\n  application/json; charset=utf-8:\n    schema:\n      type: object\n      properties:\n        foo:\n          type: string\n          example: ' +
                 body.foo +
-                '\n',
+                '\nheaders:',
             );
 
             done();
@@ -76,7 +76,7 @@ describe('ResponseBuilder.ts', function () {
                 body.foo.bar +
                 '\n          example:\n            bar: ' +
                 body.foo.bar +
-                '\n',
+                '\nheaders:',
             );
 
             done();

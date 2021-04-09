@@ -5,6 +5,7 @@ import Schema, { SchemaType } from '../components/Schema';
 import Response from '../components/Response';
 import { SchemaProperties } from '../components/Schema';
 import { JSONPrimitives } from '../types/jsonSchema';
+import Header from '../components/Header';
 
 export default class ResponseBuilder {
   private static extractType(item: unknown): SchemaType {
@@ -53,6 +54,16 @@ export default class ResponseBuilder {
           schema: new Schema(this.extractProperties(res.body)),
         }),
       },
+      headers: Object.entries<JSONPrimitives>(res.headers).reduce<{ [key: string]: Header }>(
+        (headers, [key, example]) => ({
+          ...headers,
+          [key]: new Header({
+            schema: new Schema(this.extractProperties(example)),
+            example,
+          }),
+        }),
+        {},
+      ),
     });
   }
 }
