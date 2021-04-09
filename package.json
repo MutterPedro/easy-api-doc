@@ -1,6 +1,6 @@
 {
   "name": "easy-api-doc",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Good, updated, and easy OpenAPI documentation for free and for all!",
   "main": "dist/index.js",
   "scripts": {
