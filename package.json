@@ -12,10 +12,11 @@
     "release:minor": "standard-version --no-verify --release-as minor",
     "release:major": "standard-version --no-verify --release-as major",
     "release:patch": "standard-version --no-verify --release-as patch",
-    "prerelease:*": "npm run build",
+    "pre:release:*": "npm run build",
     "test": "mocha -r ts-node/register 'test/**/*.test.ts' --exit --bail",
     "test:tdd": "mocha -r ts-node/register 'test/**/*.test.ts' --watch --watch-extensions ts --grep '#sanity|#unit'",
-    "test:coverage": "nyc npm run test"
+    "test:coverage": "nyc npm run test",
+    "coveralls": "npm run test:coverage && nyc report --reporter=text-lcov | coveralls"
   },
   "files": [
     "dist"
@@ -58,6 +59,7 @@
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "commitizen": "^4.2.3",
+    "coveralls": "^3.1.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",

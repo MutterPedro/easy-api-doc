@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "lts/*"
+cache:
+  directories:
+    ["node_modules"]
+before_install:
+  - npm config ls -l
+before_script:
+  - npm run lint
+  - npm run build
+script:
+  - npm run test:coverage
+after_script:
+  - npm audit || true
+after_success:
+  - npm run coveralls
