@@ -7,7 +7,7 @@ import { ExternalDocumentation } from '../types/documentElements';
  * - https://swagger.io/specification/#schema-object
  * - https://json-schema.org/draft/2020-12/json-schema-validation.html#rfc.section.6.4.1
  */
-interface SchemaProperties {
+export interface SchemaProperties {
   title?: string;
   multipleOf?: number;
   maximum?: number;
@@ -24,13 +24,13 @@ interface SchemaProperties {
   minProperties?: number;
   required?: string[];
   enum?: JSONPrimitives[];
-  type: 'string' | 'object' | 'number' | 'array' | 'boolean' | 'null';
+  type: SchemaType;
   allOf?: SchemaProperties[];
   oneOf?: SchemaProperties[];
   anyOf?: SchemaProperties[];
   not?: SchemaProperties;
   items?: SchemaProperties; // valid only when type = array
-  properties?: SchemaProperties; // valid only when type = object
+  properties?: { [key: string]: SchemaProperties }; // valid only when type = object
   additionalProperties?: boolean | SchemaProperties; // valid only when type = object
   description?: string;
   format?: string;
@@ -45,6 +45,8 @@ interface SchemaProperties {
   deprecated?: boolean;
   $ref?: string;
 }
+
+export type SchemaType = 'string' | 'number' | 'boolean' | 'object' | 'null' | 'array';
 
 interface Discriminator {
   propertyName: string;
