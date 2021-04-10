@@ -41,4 +41,12 @@ export default class Path extends DocumentCompositeElement<PathProperties, Opera
   remove(key: HttpVerb): void {
     delete this.properties[key];
   }
+
+  addParameter(parameter: Parameter): void {
+    if (!this.properties.parameters) {
+      this.properties.parameters = [];
+    }
+
+    this.properties.parameters.push(parameter);
+  }
 }

@@ -1,6 +1,7 @@
 import Path from '../components/Path';
 import { HttpVerb } from '../types/http';
-import ResponseBuilder from './ResponseBuilder';
+import ResponseBuilder, { ResponseBuilderOptions } from './ResponseBuilder';
+import Parameter, { ParameterProperties } from '../components/Parameter';
 
 export default class PathBuilder {
   private readonly path: Path;
@@ -9,7 +10,11 @@ export default class PathBuilder {
     this.path = path || new Path({});
   }
 
-  static create(): PathBuilder {
+  static create(options?: { summary?: string; description?: string }): PathBuilder {
+    if (options) {
+      return new PathBuilder(new Path(options));
+    }
+
     return new PathBuilder();
   }
 
@@ -17,10 +22,16 @@ export default class PathBuilder {
     return new PathBuilder(path);
   }
 
-  verb(verb: HttpVerb): ResponseBuilder {
+  addParameters(...parameters: Omit<ParameterProperties, 'content' | 'schema'>[]): this {
+    parameters.forEach((param) => this.path.addParameter(new Parameter(param)));
+
+    return this;
+  }
+
+  verb(verb: HttpVerb, options?: ResponseBuilderOptions): ResponseBuilder {
     const operation = this.path.get(verb);
     if (!operation) {
-      const builder = ResponseBuilder.create();
+      const builder = ResponseBuilder.create(options);
       this.path.add(verb, builder.getOperation());
 
       return builder;

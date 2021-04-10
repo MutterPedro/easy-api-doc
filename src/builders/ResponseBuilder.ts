@@ -8,11 +8,18 @@ import { JSONPrimitives } from '../types/jsonSchema';
 import Header from '../components/Header';
 import { HttpStatusCode } from '../types/http';
 import Operation from '../components/Operation';
+import { RequestBodyProperties } from '../components/RequestBody';
+import RequestBody from '../components/RequestBody';
+
+export interface ResponseBuilderOptions {
+  requestBody?: Omit<RequestBodyProperties, 'content'> & { content: any; mediaType: string };
+  tags?: string[];
+}
 
 export default class ResponseBuilder {
   private readonly operation: Operation;
 
-  private extractType(item: unknown): SchemaType {
+  private static extractType(item: unknown): SchemaType {
     if (item === undefined || item === null) {
       return 'null';
     }
@@ -29,7 +36,7 @@ export default class ResponseBuilder {
     }
   }
 
-  private extractProperties(item: any): SchemaProperties {
+  private static extractProperties(item: any): SchemaProperties {
     const schemaType = this.extractType(item);
     const schemaProperties: SchemaProperties = {
       type: schemaType,
@@ -55,8 +62,24 @@ export default class ResponseBuilder {
     this.operation = operation || new Operation({ responses: {} });
   }
 
-  static create(): ResponseBuilder {
-    return new ResponseBuilder();
+  static create(options?: ResponseBuilderOptions): ResponseBuilder {
+    return new ResponseBuilder(
+      new Operation({
+        responses: {},
+        tags: options?.tags,
+        requestBody:
+          options?.requestBody &&
+          new RequestBody({
+            description: options.requestBody.description,
+            required: options.requestBody.required,
+            content: {
+              [options.requestBody.mediaType]: new MediaType({
+                schema: new Schema(this.extractProperties(options.requestBody.content)),
+              }),
+            },
+          }),
+      }),
+    );
   }
 
   static from(operation: Operation): ResponseBuilder {
@@ -74,14 +97,14 @@ export default class ResponseBuilder {
         description,
         content: {
           [res.headers['content-type']]: new MediaType({
-            schema: new Schema(this.extractProperties(res.body)),
+            schema: new Schema(ResponseBuilder.extractProperties(res.body)),
           }),
         },
         headers: Object.entries<JSONPrimitives>(res.headers).reduce<{ [key: string]: Header }>(
           (headers, [key, example]) => ({
             ...headers,
             [key]: new Header({
-              schema: new Schema(this.extractProperties(example)),
+              schema: new Schema(ResponseBuilder.extractProperties(example)),
               example,
             }),
           }),

@@ -3,7 +3,7 @@ import { DocumentElement } from './base';
 import MediaType from './MediaType';
 import { JSONPrimitives } from '../types/jsonSchema';
 
-interface RequestBodyProperties {
+export interface RequestBodyProperties {
   description?: string;
   required?: boolean;
   content?: { [key: string]: MediaType };

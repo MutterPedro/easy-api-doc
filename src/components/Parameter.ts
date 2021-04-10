@@ -4,7 +4,7 @@ import Schema from './Schema';
 import { Examples, Style } from '../types/documentElements';
 import { JSONPrimitives } from '../types/jsonSchema';
 
-interface ParameterProperties {
+export interface ParameterProperties {
   name: string;
   in: 'query' | 'header' | 'path' | 'cookie';
   description?: string;

@@ -9,10 +9,9 @@
     "dev": "nodemon",
     "lint": "tsc --project tsconfig.json --noEmit && eslint ./src/**/*.ts --fix",
     "format": "prettier --write .",
-    "release:minor": "standard-version --no-verify --release-as minor",
-    "release:major": "standard-version --no-verify --release-as major",
-    "release:patch": "standard-version --no-verify --release-as patch",
-    "pre:release:*": "npm run build",
+    "release:minor": "npm run build && standard-version --no-verify --release-as minor",
+    "release:major": "npm run build && standard-version --no-verify --release-as major",
+    "release:patch": "npm run build && standard-version --no-verify --release-as patch",
     "test": "mocha -r ts-node/register 'test/**/*.test.ts' --exit --bail",
     "test:tdd": "mocha -r ts-node/register 'test/**/*.test.ts' --watch --watch-extensions ts --grep '#sanity|#unit'",
     "test:coverage": "nyc npm run test",
@@ -121,7 +120,7 @@
     "lines": 85,
     "functions": 85,
     "statements": 85,
-    "per-file": true
+    "per-file": false
   },
   "dependencies": {
     "@types/superagent": "^4.1.10",

@@ -100,6 +100,7 @@ describe('OpenAPIDocument', function () {
           done();
         });
     });
+
     it('should fail when error to generate an Open API documentation file #integration', async function () {
       const path = `/${faker.random.word()}`;
       const stub = sinon.stub(fs, 'writeFile').callsFake((_path, _data, cb) => cb(new Error('Test error')));
@@ -117,6 +118,94 @@ describe('OpenAPIDocument', function () {
 
       expect(stub).to.be.calledWithMatch('./api.yaml', `"${path}":`);
       expect(stub).to.be.calledWithMatch('./api.yaml', '"post":');
+    });
+
+    it('should generate an Open API documentation using request body and tags properties successfully #integration', function (done) {
+      const path = `/${faker.random.word()}`;
+      const body = { foo: faker.random.word() };
+      const reqBody = { bar: faker.random.word() };
+      const app = express();
+      app.post(path, (_, res) => {
+        res.status(201).json(body);
+      });
+
+      const stub = sinon.stub(fs, 'writeFile').callsFake((_path, _data, cb) => cb(null));
+
+      const title = faker.hacker.phrase();
+      const tags = [faker.random.word()];
+      const version = faker.system.semver();
+      const doc = new OpenAPIDocument('./api.yaml', {
+        title,
+        version,
+      });
+
+      supertest(app)
+        .post(path)
+        .send(reqBody)
+        .expect(201)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          doc
+            .path(path)
+            .verb('post', { requestBody: { content: reqBody, mediaType: 'application/json' }, tags })
+            .fromSuperAgentResponse(res, faker.lorem.sentence());
+          doc.writeFile();
+
+          expect(stub).to.be.calledWithMatch('./api.yaml', `${path}:`);
+          expect(stub).to.be.calledWithMatch('./api.yaml', 'post:');
+          expect(stub).to.be.calledWithMatch('./api.yaml', '"201":');
+          expect(stub).to.be.calledWithMatch('./api.yaml', 'application/json; charset=utf-8:');
+          expect(stub).to.be.calledWithMatch('./api.yaml', 'application/json');
+          expect(stub).to.be.calledWithMatch('./api.yaml', 'requestBody');
+          expect(stub).to.be.calledWithMatch('./api.yaml', 'bar:');
+
+          done();
+        });
+    });
+
+    it('should generate an Open API documentation with servers defined successfully #integration', function (done) {
+      const path = `/${faker.random.word()}`;
+      const body = { foo: faker.random.word() };
+      const app = express();
+      app.post(path, (_, res) => {
+        res.status(200).json(body);
+      });
+
+      const stub = sinon.stub(fs, 'writeFile').callsFake((_path, _data, cb) => cb(null));
+
+      const title = faker.hacker.phrase();
+      const version = faker.system.semver();
+      const url = faker.internet.url();
+      const doc = new OpenAPIDocument(
+        './api.yaml',
+        {
+          title,
+          version,
+        },
+        [
+          {
+            url,
+          },
+        ],
+      );
+
+      supertest(app)
+        .post(path)
+        .expect(200)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          doc.path(path).verb('post').fromSuperAgentResponse(res, faker.lorem.sentence());
+          doc.writeFile();
+
+          expect(stub).to.be.calledWithMatch('./api.yaml', `${path}:`);
+          expect(stub).to.be.calledWithMatch('./api.yaml', 'post:');
+          expect(stub).to.be.calledWithMatch('./api.yaml', '"200":');
+          expect(stub).to.be.calledWithMatch('./api.yaml', 'application/json; charset=utf-8:');
+          expect(stub).to.be.calledWithMatch('./api.yaml', 'servers:');
+          expect(stub).to.be.calledWithMatch('./api.yaml', 'url:');
+
+          done();
+        });
     });
   });
 });
