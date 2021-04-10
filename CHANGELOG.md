@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/MutterPedro/easy-api-doc/compare/v0.1.1...v0.1.2) (2021-04-10)
+
+
+### Features
+
+* **parameters:** added parameters to Path component, requestBody to Response and Servers to OpenAPI ([4944820](https://github.com/MutterPedro/easy-api-doc/commit/4944820ce53fa125c18d7ba247dae7304eaf5a7a))
+
 ### [0.1.1](https://github.com/MutterPedro/easy-api-doc/compare/v0.1.0...v0.1.1) (2021-04-09)
 
 ## 0.1.0 (2021-04-09)
