@@ -216,6 +216,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [ ] Enable [Security component](https://swagger.io/specification/#security-requirement-object) setup
 - [ ] Builder using Axios response
-- [ ] Builder using Express response
-- [ ] Builder using native HTTP response
+- [ ] Builder using Express request/response
+- [ ] Builder using native HTTP request/response
 - [ ] Builder using manual definition

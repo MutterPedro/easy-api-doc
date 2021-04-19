@@ -1,3 +1,5 @@
+import { createServer } from 'http';
+
 import { expect } from 'chai';
 import express from 'express';
 import faker from 'faker';
@@ -21,7 +23,7 @@ describe('ResponseBuilder.ts', function () {
   describe('Unit tests', function () {
     describe('fromAgentResponse', function () {
       it('should generate a Response component JSON file successfully #unit', function (done) {
-        const description = faker.lorem.sentence();
+        const description = faker.random.words(5);
         const path = `/${faker.random.word()}`;
         const body = {
           foo: faker.random.word(),
@@ -91,7 +93,7 @@ describe('ResponseBuilder.ts', function () {
       });
 
       it('should generate a Response component with nested object JSON file successfully #unit', function (done) {
-        const description = faker.lorem.sentence();
+        const description = faker.random.words(5);
         const path = `/${faker.random.word()}`;
         const body = { foo: { bar: faker.random.word() } };
         const app = express();
@@ -138,6 +140,58 @@ describe('ResponseBuilder.ts', function () {
                   },
                 },
               });
+
+            done();
+          });
+      });
+    });
+
+    describe('fromServerResponse', function () {
+      it('should generate a Response component JSON file successfully #unit', function (done) {
+        const description = faker.random.words(5);
+        const path = `/${faker.random.word()}`;
+        const body = {
+          foo: faker.random.word(),
+        };
+        const app = createServer((_, res) => {
+          res.setHeader('Content-Type', 'application/json');
+          res.writeHead(200);
+
+          const builder = ResponseBuilder.create();
+          builder.fromServerResponse(res, description, body);
+          const generated = builder.getOperation().generate('yaml');
+          console.log(generated);
+          const object = yaml.parse(generated);
+
+          expect(generated).to.be.a('string');
+          expect(object).to.have.property('responses');
+          expect(object.responses).to.have.property('200');
+          expect(object.responses['200']).to.have.property('description', description);
+          expect(object.responses['200']).to.have.property('headers');
+          expect(object.responses['200'])
+            .to.have.property('content')
+            .deep.equal({
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    foo: {
+                      type: 'string',
+                      example: body.foo,
+                    },
+                  },
+                },
+              },
+            });
+
+          res.end(JSON.stringify(body));
+        });
+
+        supertest(app)
+          .post(path)
+          .expect(200)
+          .end((err) => {
+            expect(err).to.be.null;
 
             done();
           });

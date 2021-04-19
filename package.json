@@ -49,9 +49,10 @@
     "@types/express": "^4.17.11",
     "@types/faker": "^5.5.1",
     "@types/mocha": "^8.2.2",
-    "@types/node": "^14.14.37",
+    "@types/node": "^14.14.41",
     "@types/sinon": "^9.0.11",
     "@types/sinon-chai": "^3.2.5",
+    "@types/superagent": "^4.1.10",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
@@ -123,7 +124,6 @@
     "per-file": false
   },
   "dependencies": {
-    "@types/superagent": "^4.1.10",
     "yaml": "^1.10.2"
   }
 }

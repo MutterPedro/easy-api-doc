@@ -21,8 +21,8 @@ describe('PathBuilder.ts', function () {
   describe('Unit tests', function () {
     describe('addParameters', function () {
       it('should generate a Path component with parameters JSON file successfully #unit', function (done) {
-        const description = faker.lorem.sentence();
-        const summary = faker.lorem.sentence();
+        const description = faker.random.words(5);
+        const summary = faker.random.words(5);
         const path = `/${faker.random.word()}`;
         const body = {
           foo: faker.random.word(),

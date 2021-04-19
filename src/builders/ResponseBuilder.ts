@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { ServerResponse } from 'http';
+
 import type { Response as AgentResponse } from 'superagent';
 
 import MediaType from '../components/MediaType';
@@ -91,12 +94,14 @@ export default class ResponseBuilder {
   }
 
   fromSuperAgentResponse(res: AgentResponse, description: string): void {
+    const mediaType = res.headers['content-type'] || '*/*';
+
     this.operation.add(
       res.status.toString() as HttpStatusCode,
       new Response({
         description,
         content: {
-          [res.headers['content-type']]: new MediaType({
+          [mediaType]: new MediaType({
             schema: new Schema(ResponseBuilder.extractProperties(res.body)),
           }),
         },
@@ -106,6 +111,32 @@ export default class ResponseBuilder {
             [key]: new Header({
               schema: new Schema(ResponseBuilder.extractProperties(example)),
               example,
+            }),
+          }),
+          {},
+        ),
+      }),
+    );
+  }
+
+  fromServerResponse(res: ServerResponse, description: string, body?: unknown): void {
+    const mediaType = res.getHeader('content-type')?.toString() || '*/*';
+
+    this.operation.add(
+      res.statusCode.toString() as HttpStatusCode,
+      new Response({
+        description,
+        content: {
+          [mediaType]: new MediaType({
+            schema: new Schema(ResponseBuilder.extractProperties(body)),
+          }),
+        },
+        headers: res.getHeaderNames().reduce<{ [key: string]: Header }>(
+          (headers, key) => ({
+            ...headers,
+            [key]: new Header({
+              schema: new Schema(ResponseBuilder.extractProperties(res.getHeader(key))),
+              example: res.getHeader(key),
             }),
           }),
           {},

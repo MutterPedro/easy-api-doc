@@ -17,7 +17,7 @@ describe('RequestBody.ts', function () {
 
   describe('Unit tests', function () {
     it('should generate a JSON file successfully #unit', function () {
-      const description = faker.lorem.sentence();
+      const description = faker.random.words(5);
 
       const requestBody = new RequestBody({ description });
       const generated = requestBody.generate('json');
@@ -27,7 +27,7 @@ describe('RequestBody.ts', function () {
     });
 
     it('should generate a YAML file successfully #unit', function () {
-      const description = faker.lorem.sentence();
+      const description = faker.random.words(5);
 
       const requestBody = new RequestBody({ description });
       const generated = requestBody.generate('yaml');

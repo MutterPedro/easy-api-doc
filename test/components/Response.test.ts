@@ -21,7 +21,7 @@ describe('Response.ts', function () {
 
   describe('Unit tests', function () {
     it('should generate a JSON file successfully #unit', function () {
-      const description = faker.lorem.sentence();
+      const description = faker.random.words(5);
       const content = {
         'application/json': new MediaType({ schema: new Schema({ type: 'object' }) }),
       };
@@ -42,7 +42,7 @@ describe('Response.ts', function () {
     });
 
     it('should generate a YAML file successfully #unit', function () {
-      const description = faker.lorem.sentence();
+      const description = faker.random.words(5);
       const content = {
         'application/json': new MediaType({ schema: new Schema({ type: 'object' }) }),
       };
