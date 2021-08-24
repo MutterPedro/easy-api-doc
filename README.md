@@ -18,6 +18,7 @@ Good, updated, and easy API documentation for free and for all! ✊ 📖
     - [Document setup](#document-setup)
     - [Path and response definition](#path-and-response-definition)
     - [Building using a super agent response](#building-using-a-super-agent-response)
+    - [Building using a native node.js HTTP response](#building-using-a-native-nodejs-http-response)
     - [Generating the document](#generating-the-document)
   - [Contributing](#contributing)
   - [Versioning](#versioning)
@@ -186,6 +187,25 @@ paths:
 openapi: 3.0.3
 ```
 
+### Building using a native node.js HTTP response
+
+If you prefer to keep away from third parties dependencies, **easy-api-docs** also provides to you a way to take advantage of the native node.js HTTP response:
+
+```ts
+import { doc } from '@helpers/documentation';
+
+const app = createServer((req, res) => {
+  const url = new URL(req.url);
+
+  res.setHeader('Content-Type', 'application/json');
+  res.writeHead(200);
+
+  doc.path(url.pathname).verb(req.method).fromServerResponse(res, 'description', { foo: 'bar' });
+});
+```
+
+_Note: you should only invoke the `fromServerResponse` method after you set the response status code, otherwise it won't be able to help you that much._
+
 ### Generating the document
 
 After you get your [OpenAPIDocument]('src/helpers/OpenAPIDocument.ts') instance, it is simple like calling a function to generate you document file.
@@ -217,5 +237,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] Enable [Security component](https://swagger.io/specification/#security-requirement-object) setup
 - [ ] Builder using Axios response
 - [ ] Builder using Express request/response
-- [ ] Builder using native HTTP request/response
+- [x] Builder using native HTTP request/response
 - [ ] Builder using manual definition

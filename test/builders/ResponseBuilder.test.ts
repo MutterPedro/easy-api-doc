@@ -160,7 +160,6 @@ describe('ResponseBuilder.ts', function () {
           const builder = ResponseBuilder.create();
           builder.fromServerResponse(res, description, body);
           const generated = builder.getOperation().generate('yaml');
-          console.log(generated);
           const object = yaml.parse(generated);
 
           expect(generated).to.be.a('string');
