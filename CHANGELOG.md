@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/MutterPedro/easy-api-doc/compare/v0.1.3...v0.1.4) (2021-08-24)
+
+
+### Features
+
+* **response builder:** added support to build the response object using the native HTTP response ([c0d84c7](https://github.com/MutterPedro/easy-api-doc/commit/c0d84c7c2649fa3244422a40cfaf9a314a424229))
+
 ### [0.1.3](https://github.com/MutterPedro/easy-api-doc/compare/v0.1.2...v0.1.3) (2021-04-17)
 
 ### [0.1.2](https://github.com/MutterPedro/easy-api-doc/compare/v0.1.1...v0.1.2) (2021-04-10)
