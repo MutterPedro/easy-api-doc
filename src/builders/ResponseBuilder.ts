@@ -13,6 +13,7 @@ import { HttpStatusCode } from '../types/http';
 import Operation from '../components/Operation';
 import { RequestBodyProperties } from '../components/RequestBody';
 import RequestBody from '../components/RequestBody';
+import StatusBuilder from './StatusBuilder';
 
 export interface ResponseBuilderOptions {
   requestBody?: Omit<RequestBodyProperties, 'content'> & { content: any; mediaType: string };
@@ -65,6 +66,18 @@ export default class ResponseBuilder {
     this.operation = operation || new Operation({ responses: {} });
   }
 
+  getOperation(): Operation {
+    return this.operation;
+  }
+
+  status(status: number): StatusBuilder {
+    const builder = StatusBuilder.create();
+
+    this.operation.add(status.toString() as HttpStatusCode, builder.getResponse());
+
+    return builder;
+  }
+
   static create(options?: ResponseBuilderOptions): ResponseBuilder {
     return new ResponseBuilder(
       new Operation({
@@ -87,10 +100,6 @@ export default class ResponseBuilder {
 
   static from(operation: Operation): ResponseBuilder {
     return new ResponseBuilder(operation);
-  }
-
-  getOperation(): Operation {
-    return this.operation;
   }
 
   fromSuperAgentResponse(res: AgentResponse, description: string): void {

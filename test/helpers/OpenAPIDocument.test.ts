@@ -207,5 +207,42 @@ describe('OpenAPIDocument', function () {
           done();
         });
     });
+
+    it('should generate an Open API documentation built manually #integration', function () {
+      const title = faker.hacker.phrase();
+      const version = faker.system.semver();
+      const url = faker.internet.url();
+      const stub = sinon.stub(fs, 'writeFile').callsFake((_path, _data, cb) => cb(null));
+      const doc = new OpenAPIDocument('./api.yaml', { title, version }, [{ url }]);
+
+      doc
+        .path('/foo')
+        .verb('get')
+        .status(200)
+        .withContent('application/json', { example: faker.random.word(), schema: { type: 'string' } });
+      doc
+        .path('/foo')
+        .verb('get')
+        .status(404)
+        .withContent('application/json', { example: faker.random.word(), schema: { type: 'string' } });
+      doc
+        .path('/bar')
+        .verb('post')
+        .status(201)
+        .withContent('application/json', { example: faker.datatype.number(), schema: { type: 'number' } });
+
+      doc.writeFile();
+
+      expect(stub).to.be.calledWithMatch('./api.yaml', 'foo:');
+      expect(stub).to.be.calledWithMatch('./api.yaml', 'bar:');
+      expect(stub).to.be.calledWithMatch('./api.yaml', 'post:');
+      expect(stub).to.be.calledWithMatch('./api.yaml', 'get:');
+      expect(stub).to.be.calledWithMatch('./api.yaml', '"200":');
+      expect(stub).to.be.calledWithMatch('./api.yaml', '"404":');
+      expect(stub).to.be.calledWithMatch('./api.yaml', '"201":');
+      expect(stub).to.be.calledWithMatch('./api.yaml', 'application/json');
+      expect(stub).to.be.calledWithMatch('./api.yaml', 'servers:');
+      expect(stub).to.be.calledWithMatch('./api.yaml', 'url:');
+    });
   });
 });

@@ -7,6 +7,7 @@ import { HttpStatusCode } from '../types/http';
 import Server from './Server';
 import Path from './Path';
 import { JSONPrimitives } from '../types/jsonSchema';
+import { ResponseProperties } from './Response';
 
 export interface OperationProperties {
   responses: Partial<Record<HttpStatusCode, Response>> & { default?: Response };
@@ -38,6 +39,13 @@ export default class Operation extends DocumentCompositeElement<OperationPropert
   add(key: HttpStatusCode, child: Response): void {
     this.properties.responses[key] = child;
     this.children.set(key, child);
+  }
+
+  update(key: HttpStatusCode, child: ResponseProperties): void {
+    const response = this.children.get(key);
+    if (response) {
+      response.update(child);
+    }
   }
 
   remove(key: HttpStatusCode): void {

@@ -4,7 +4,7 @@ import { DocumentElement } from './base';
 import Schema from './Schema';
 import MediaType from './MediaType';
 
-interface HeaderProperties {
+export interface HeaderProperties {
   description?: string;
   required?: boolean;
   deprecated?: boolean;

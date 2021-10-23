@@ -196,5 +196,41 @@ describe('ResponseBuilder.ts', function () {
           });
       });
     });
+
+    describe('status', function () {
+      it('should add a new response to the inner operation #unit', function () {
+        const description = faker.random.words(5);
+        const example = faker.random.words(10);
+        const header = faker.random.words(10);
+
+        const builder = ResponseBuilder.create();
+        builder
+          .status(200)
+          .withContent('application/json', { schema: { type: 'string' }, example })
+          .withDescription(description)
+          .withHeader('foo', { schema: { type: 'string' }, example: header })
+          .withLink('link', { description });
+
+        const generated = builder.getOperation().generate('yaml');
+        const object = yaml.parse(generated);
+
+        expect(generated).to.be.a('string');
+        expect(object).to.have.property('responses');
+        expect(object.responses).to.have.property('200');
+        expect(object.responses['200']).to.have.property('description', description);
+        expect(object.responses['200']).to.have.property('headers');
+        expect(object.responses['200']).to.have.property('links');
+        expect(object.responses['200'])
+          .to.have.property('content')
+          .deep.equal({
+            'application/json': {
+              example,
+              schema: {
+                type: 'string',
+              },
+            },
+          });
+      });
+    });
   });
 });

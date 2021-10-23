@@ -13,9 +13,13 @@ export interface ResponseProperties {
 
 export default class Response extends DocumentElement<ResponseProperties> {
   constructor(
-    protected readonly properties: ResponseProperties,
+    protected properties: ResponseProperties,
     protected readonly specificationExtensions?: { [key: string]: JSONPrimitives },
   ) {
     super(properties, specificationExtensions);
+  }
+
+  update(properties: ResponseProperties): void {
+    this.properties = { ...this.properties, ...properties };
   }
 }

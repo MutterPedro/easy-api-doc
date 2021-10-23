@@ -2,7 +2,7 @@ import { DocumentElement } from './base';
 import { JSONPrimitives } from '../types/jsonSchema';
 import Server from './Server';
 
-interface LinkProperties {
+export interface LinkProperties {
   operationRef?: string;
   operationId?: string;
   parameters?: { [key: string]: JSONPrimitives };

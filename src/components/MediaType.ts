@@ -4,7 +4,7 @@ import Encoding from './Encoding';
 import { JSONPrimitives } from '../types/jsonSchema';
 import { Examples } from '../types/documentElements';
 
-interface MediaTypeProperties {
+export interface MediaTypeProperties {
   schema: Schema;
   example?: JSONPrimitives;
   examples?: { [key: string]: Examples };
