@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/MutterPedro/easy-api-doc/compare/v0.1.4...v0.2.0) (2021-10-23)
+
+
+### Features
+
+* **statusbuilder:** introduced StatusBuilder for manual responses build ([2586c9c](https://github.com/MutterPedro/easy-api-doc/commit/2586c9c05a7722c2d26f8223377216add071fb48))
+
 ### [0.1.4](https://github.com/MutterPedro/easy-api-doc/compare/v0.1.3...v0.1.4) (2021-08-24)
 
 
