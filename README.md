@@ -19,6 +19,7 @@ Good, updated, and easy API documentation for free and for all! ✊ 📖
     - [Path and response definition](#path-and-response-definition)
     - [Building using a super agent response](#building-using-a-super-agent-response)
     - [Building using a native node.js HTTP response](#building-using-a-native-nodejs-http-response)
+    - [Building manually](#building-manually)
     - [Generating the document](#generating-the-document)
   - [Contributing](#contributing)
   - [Versioning](#versioning)
@@ -204,6 +205,32 @@ const app = createServer((req, res) => {
 });
 ```
 
+### Building manually
+
+If you just want to build a documentation manually, **easy-api-docs** provides an API to do so:
+
+```ts
+const doc = new OpenAPIDocument('./api.yaml', { title, version });
+
+doc
+  .path('/foo')
+  .verb('get')
+  .status(200)
+  .withContent('application/json', { example: 'Super cool value', schema: { type: 'string' } });
+doc
+  .path('/foo')
+  .verb('get')
+  .status(404)
+  .withContent('application/json', { example: 'Not found 😢', schema: { type: 'string' } });
+doc
+  .path('/bar')
+  .verb('post')
+  .status(201)
+  .withContent('application/json', { example: 'Persisted!', schema: { type: 'number' } });
+
+doc.writeFile();
+```
+
 _Note: you should only invoke the `fromServerResponse` method after you set the response status code, otherwise it won't be able to help you that much._
 
 ### Generating the document
@@ -238,4 +265,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] Builder using Axios response
 - [ ] Builder using Express request/response
 - [x] Builder using native HTTP request/response
-- [ ] Builder using manual definition
+- [x] Builder using manual definition
