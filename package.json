@@ -124,6 +124,6 @@
     "per-file": false
   },
   "dependencies": {
-    "yaml": "^1.10.2"
+    "yaml": "^2.2.2"
   }
 }
